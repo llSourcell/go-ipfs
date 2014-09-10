@@ -126,6 +126,7 @@ func (n *DAGService) Add(nd *Node) (u.Key, error) {
 func (n *DAGService) AddRecursive(nd *Node) error {
 	_, err := n.Add(nd)
 	if err != nil {
+		fmt.Printf("AddRecursive Error: %s\n", err)
 		return err
 	}
 

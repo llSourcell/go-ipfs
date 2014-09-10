@@ -23,6 +23,7 @@ var cmdIpfsCat = &commander.Command{
 }
 
 func catCmd(c *commander.Command, inp []string) error {
+	u.Debug = true
 	if len(inp) < 1 {
 		u.POut(c.Long)
 		return nil

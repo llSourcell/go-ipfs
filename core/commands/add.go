@@ -88,6 +88,15 @@ func addFile(n *core.IpfsNode, fpath string, depth int) (*dag.Node, error) {
 		return nil, err
 	}
 
+	k, err := root.Key()
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("Adding file: %s = %s\n", fpath, k.Pretty())
+	for _, l := range root.Links {
+		fmt.Printf("SubBlock: %s\n", l.Hash.B58String())
+	}
+
 	return root, addNode(n, root, fpath)
 }
 
