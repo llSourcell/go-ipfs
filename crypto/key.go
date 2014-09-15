@@ -43,6 +43,9 @@ type PubKey interface {
 
 	// Bytes returns a serialized, storeable representation of this key
 	Bytes() ([]byte, error)
+
+	// Hash returns the hash of this public key (for creating peer ID's)
+	Hash() ([]byte, error)
 }
 
 // Given a public key, generates the shared key.
