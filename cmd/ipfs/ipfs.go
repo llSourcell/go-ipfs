@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"runtime/pprof"
 
 	"github.com/jbenet/go-ipfs/Godeps/_workspace/src/github.com/gonuts/flag"
 	"github.com/jbenet/go-ipfs/Godeps/_workspace/src/github.com/jbenet/commander"
@@ -49,6 +50,7 @@ Use "ipfs help <command>" for more information about a command.
 		cmdIpfsMount,
 		cmdIpfsInit,
 		cmdIpfsRun,
+		cmdIpfsPub,
 	},
 	Flag: *flag.NewFlagSet("ipfs", flag.ExitOnError),
 }

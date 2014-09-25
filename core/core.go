@@ -98,7 +98,7 @@ func NewIpfsNode(cfg *config.Config, online bool) (*IpfsNode, error) {
 	if online {
 
 		// when not online, don't need to parse private keys (yet)
-		local, err := initIdentity(cfg)
+		local, err = initIdentity(cfg)
 		if err != nil {
 			cancel()
 			return nil, err
