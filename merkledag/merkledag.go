@@ -4,12 +4,15 @@ import (
 	"fmt"
 
 	"github.com/jbenet/go-ipfs/Godeps/_workspace/src/code.google.com/p/goprotobuf/proto"
+	"github.com/op/go-logging"
 
 	mh "github.com/jbenet/go-ipfs/Godeps/_workspace/src/github.com/jbenet/go-multihash"
 	blocks "github.com/jbenet/go-ipfs/blocks"
 	bserv "github.com/jbenet/go-ipfs/blockservice"
 	u "github.com/jbenet/go-ipfs/util"
 )
+
+var log = logging.MustGetLogger("merkledag")
 
 // NodeMap maps u.Keys to Nodes.
 // We cannot use []byte/Multihash for keys :(
@@ -93,6 +96,31 @@ func (n *Node) Key() (u.Key, error) {
 	return u.Key(h), err
 }
 
+// Recursively update all hash links and size values in the tree
+func (n *Node) Update() error {
+	log.Debug("node update")
+	for _, l := range n.Links {
+		if l.Node != nil {
+			err := l.Node.Update()
+			if err != nil {
+				return err
+			}
+			nhash, err := l.Node.Multihash()
+			if err != nil {
+				return err
+			}
+			l.Hash = nhash
+			size, err := l.Node.Size()
+			if err != nil {
+				return err
+			}
+			l.Size = size
+		}
+	}
+	_, err := n.Encoded(true)
+	return err
+}
+
 // DAGService is an IPFS Merkle DAG service.
 // - the root is virtual (like a forest)
 // - stores nodes' data in a BlockService
@@ -131,12 +159,11 @@ func (n *DAGService) AddRecursive(nd *Node) error {
 	}
 
 	for _, link := range nd.Links {
-		if link.Node == nil {
-			panic("Why does this node have a nil link?\n")
-		}
-		err := n.AddRecursive(link.Node)
-		if err != nil {
-			return err
+		if link.Node != nil {
+			err := n.AddRecursive(link.Node)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
