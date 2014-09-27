@@ -54,7 +54,7 @@ func SendCommand(command *Command, confdir string) error {
 		lk.Close()
 	}
 
-	log.Info("Daemon is running! %s", err)
+	log.Info("Daemon is running! [reason = %s]", err)
 
 	server, err := getDaemonAddr(confdir)
 	if err != nil {
