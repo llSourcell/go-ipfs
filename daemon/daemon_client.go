@@ -8,11 +8,10 @@ import (
 	"net"
 	"os"
 
-	"github.com/camlistore/lock"
-
 	u "github.com/jbenet/go-ipfs/util"
 )
 
+// ErrDaemonNotRunning is an error signaling that the daemon is offline
 var ErrDaemonNotRunning = errors.New("daemon not running")
 
 func getDaemonAddr(confdir string) (string, error) {
@@ -40,6 +39,8 @@ func getDaemonAddr(confdir string) (string, error) {
 	return string(line), nil
 }
 
+// SendCommand attempts to run the command over a currently-running daemon.
+// If there is no running daemon, returns ErrDaemonNotRunning
 func SendCommand(command *Command, confdir string) error {
 	//check if daemon is running
 	log.Info("Checking if daemon is running...")
@@ -48,10 +49,10 @@ func SendCommand(command *Command, confdir string) error {
 	if err != nil {
 		return err
 	}
-	lk, err := lock.Lock(confdir + "/daemon.lock")
+	lk, err := daemonLock(confdir)
 	if err == nil {
-		return ErrDaemonNotRunning
 		lk.Close()
+		return ErrDaemonNotRunning
 	}
 
 	log.Info("Daemon is running! %s", err)
