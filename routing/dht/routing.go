@@ -26,6 +26,7 @@ func (dht *IpfsDHT) PutValue(ctx context.Context, key u.Key, value []byte) error
 		peers = append(peers, npeers...)
 	}
 
+	//test
 	query := newQuery(key, func(ctx context.Context, p *peer.Peer) (*dhtQueryResult, error) {
 		u.DOut("[%s] PutValue qry part %v\n", dht.self.ID.Pretty(), p.ID.Pretty())
 		err := dht.putValueToNetwork(ctx, p, string(key), value)
