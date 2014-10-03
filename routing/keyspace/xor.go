@@ -25,6 +25,8 @@ func (s *xorKeySpace) Key(id []byte) Key {
 	}
 }
 
+//test
+
 // Equal returns whether keys are equal in this key space
 func (s *xorKeySpace) Equal(k1, k2 Key) bool {
 	return bytes.Equal(k1.Bytes, k2.Bytes)
